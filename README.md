@@ -1,3 +1,9 @@
+
+# Development Notes
+
+1) Resource for scatter plot: https://www.d3-graph-gallery.com/graph/scatter_basic.html
+
+
 # SampleDashboard
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.0.3.
