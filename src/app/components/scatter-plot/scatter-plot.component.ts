@@ -19,7 +19,7 @@ import * as d3Axis from 'd3-axis';
 })
 export class ScatterPlotComponent implements OnInit {
 
-  title = 'Line Chart';
+  // title = 'Line Chart';
 
   private margin = { top: 20, right: 20, bottom: 30, left: 50 };
   private width: number;
@@ -28,18 +28,22 @@ export class ScatterPlotComponent implements OnInit {
   private y: any;
   private svg: any;
   private line: d3Shape.Line<[number, number]>;
+  //private point: d3Shape.Point<[number, number]>;
+  xAxisScale: any;
+  yAxisScale: any;
 
 
   constructor() {
     this.width = 600 - this.margin.left - this.margin.right;
-    this.height = 500 - this.margin.top - this.margin.bottom;
+    this.height = 500 - this.margin.top - this.margin.bottom;    
   }
 
   ngOnInit() {
     this.initSvg();
     this.initAxis();
     this.drawAxis();
-    this.drawLine();
+    //this.drawLine();
+    this.drawScatterPlot();
   }
 
   private initSvg() {
@@ -83,5 +87,26 @@ export class ScatterPlotComponent implements OnInit {
       .datum(STOCKS)
       .attr('class', 'line')
       .attr('d', this.line);
+  }
+
+  private drawScatterPlot() {
+    // this.svg.append('circle')
+    // .attr('class', 'dot')
+    // .attr('cx', d => this.xAxisScale(d.date))
+    // .attr('cy', d => this.yAxisScale(d.value))
+    // .attr('r', 7);
+
+    this.svg.append('g')
+      .selectAll("dot")
+      .data(STOCKS)
+      .enter()
+      .append("circle")
+      // .attr("cx", function (d) { console.log("d->" + d) ;return this.x(d.date); })
+      // .attr("cy", function (d) { return this.y(d.value); })
+      .attr("cx", (d: any) => this.x(d.date))
+      .attr("cy", (d: any) => this.y(d.value))
+      .attr("r", 1.5)
+      .style("fill", "#69b3a2")
+      // .style("fill", "#FF0000")
   }
 }

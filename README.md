@@ -3,6 +3,10 @@
 
 1) Resource for scatter plot: https://www.d3-graph-gallery.com/graph/scatter_basic.html
 
+2) D3 with Angular for scatter-plot
+http://www.muller.tech/post/2017/11/20/angular5-d3js-scatter-chart/
+
+
 
 # SampleDashboard
 
