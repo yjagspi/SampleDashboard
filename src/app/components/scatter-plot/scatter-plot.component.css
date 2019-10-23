@@ -21,4 +21,10 @@
     stroke-width: 1.5px;
 }
 
-/* To increase the model dialog width */
+/* To center the D3 Scatter Plot */
+.container-scatter-plot {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
