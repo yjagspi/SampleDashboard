@@ -22,7 +22,7 @@ export class ScatterPlotComponent implements OnInit {
 
   // title = 'Line Chart';
 
-  private margin = { top: 20, right: 50, bottom: 30, left: 50 };
+  private margin = { top: 50, right: 50, bottom: 30, left: 50 };
   private width: number;
   private height: number;
   private x: any;
@@ -54,13 +54,13 @@ export class ScatterPlotComponent implements OnInit {
       .append('g')
       .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
 
-    this.svg.append("text")
-      .attr("x", (this.width / 2))
-      .attr("y", this.margin.top / 2)
-      .attr("text-anchor", "middle")
-      .style("font-size", "16px")
-      .style("text-decoration", "underline")
-      .text("Files vs. SLA: Scatterplot");
+    // this.svg.append("text")
+    //   .attr("x", (this.width / 2))
+    //   .attr("y", this.margin.top)
+    //   .attr("text-anchor", "middle")
+    //   .style("font-size", "16px")
+    //   .style("text-decoration", "underline")
+    //   .text("Files vs. SLA: Scatterplot");
   }
 
   private initAxis() {
@@ -74,9 +74,10 @@ export class ScatterPlotComponent implements OnInit {
     //this.y = d3Scale.scaleLinear().range([this.height, 0]).ticks(3);
     //this.y.domain([10, 20]);
 
-    this.y1 = d3Scale.scaleBand().range([this.height, 0]);
+    // this.y1 = d3Scale.scaleBand().range([this.height, 0]);
+    this.y1 = d3Scale.scaleBand().domain(["Node 1", "Node 2", "Node 3"]).rangeRound([this.height, 0]);
     // this.y1 = d3Scale.scaleBand().range([0, this.height]);
-    this.y1.domain(["Node 1", "Node 2", "Node 3"]);
+    //this.y1.domain(["Node 1", "Node 2", "Node 3"]);
 
  
   }
@@ -94,7 +95,7 @@ export class ScatterPlotComponent implements OnInit {
     // Add the Y1 Axis
     this.svg.append("g")
       .attr("class", "axisRed")
-      .attr("transform", "translate( " + this.width + ", 0 )")
+      .attr("transform", "translate( " + this.width + ", 0 )")      
       // .attr('transform', "translate( " + this.width+ ", " + (this.height - (this.height/3)) + ")")
       .call(d3Axis.axisRight(this.y1));
 
@@ -150,9 +151,9 @@ export class ScatterPlotComponent implements OnInit {
       //.attr("cy", (d: any) => this.y(d.item_id))
       .attr("cx", (d: any) => { console.log("Cx is: " + this.x(d.arrival_time)); return this.x(d.arrival_time) })
       .attr("cy", (d: any) => { return this.calcNodeYValues(d) })
-      .attr("r", 5)
-      //.style("fill", "#69b3a2")
-      .style("fill", "#FF0000");
+      .attr("r", 3)
+      .style("fill", "#69b3a2")
+      //.style("fill", "#FF0000");
 
     //Draw a line for the different plots
     // this.svg.append("path")
@@ -173,7 +174,8 @@ export class ScatterPlotComponent implements OnInit {
     console.log("Node Number Y is : -> " + this.y1(d.item_id.node_number));
     console.log("Item Number: -> " + d.item_id.item_number);
     console.log("Y is -> :" + (this.height - this.y1(d.item_id.node_number) * d.item_id.item_number));
-
-    return  this.y1(d.item_id.node_number) * d.item_id.item_number;
+    console.log("Band width: ->" + this.y1.bandwidth());
+    return this.y1(d.item_id.node_number) + ((this.y1.bandwidth()/100)*d.item_id.item_number);
+    //return  this.height - (this.y1(d.item_id.node_number) * (d.item_id.item_number/this.y1.bandwidth));
   }
 }
