@@ -152,7 +152,8 @@ export class ScatterPlotComponent implements OnInit {
       .attr("cx", (d: any) => { console.log("Cx is: " + this.x(d.arrival_time)); return this.x(d.arrival_time) })
       .attr("cy", (d: any) => { return this.calcNodeYValues(d) })
       .attr("r", 3)
-      .style("fill", "#69b3a2")
+      // .style("fill", "#69b3a2")
+      .style("fill",(d:any) => this.setColorCodeForDataPoints(d))
       //.style("fill", "#FF0000");
 
     //Draw a line for the different plots
@@ -177,5 +178,16 @@ export class ScatterPlotComponent implements OnInit {
     console.log("Band width: ->" + this.y1.bandwidth());
     return this.y1(d.item_id.node_number) + ((this.y1.bandwidth()/100)*d.item_id.item_number);
     //return  this.height - (this.y1(d.item_id.node_number) * (d.item_id.item_number/this.y1.bandwidth));
+  }
+
+  /****
+   * If the arrival time is negative, the file arrived early.
+   * Hence show the color as greenish.
+   * If the arrival time is postitive, the file arrived late.
+   * Hence show the color as red.
+   */
+  private setColorCodeForDataPoints(d):string{
+    console.log("Time Arrived :->" + d.arrival_time);
+    return (d.arrival_time <= 0) ? "#69b3a2" : "#FF0000";    
   }
 }

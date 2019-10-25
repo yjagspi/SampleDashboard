@@ -13,7 +13,7 @@ export const TIMELINES: ItemArrival[] = [
     {item_id : {"node_number" : "Node 1", "item_number" : 70}, arrival_time : 1},
     {item_id : {"node_number" : "Node 1", "item_number" : 80}, arrival_time : 1},
     {item_id : {"node_number" : "Node 1", "item_number" : 90}, arrival_time : 1},
-    {item_id : {"node_number" : "Node 1", "item_number" : 100}, arrival_time : 5},
+    {item_id : {"node_number" : "Node 1", "item_number" : 100}, arrival_time : -5},
     {item_id : {"node_number" : "Node 2", "item_number" : 10}, arrival_time : 0},
     {item_id : {"node_number" : "Node 2", "item_number" : 20}, arrival_time : 0},
     {item_id : {"node_number" : "Node 2", "item_number" : 30}, arrival_time : 1},
