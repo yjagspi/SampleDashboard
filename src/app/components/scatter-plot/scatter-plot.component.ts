@@ -34,23 +34,37 @@ export class ScatterPlotComponent implements OnInit {
   xAxisScale: any;
   yAxisScale: any;
   yAxisRight: any;
+  tooltip : any;
+  node: any;
 
-
-  constructor() {
+  constructor(private elementRef: ElementRef) {
     this.width = 600 - this.margin.left - this.margin.right;
-    this.height = 500 - this.margin.top - this.margin.bottom;
+    this.height = 500 - this.margin.top - this.margin.bottom;    
   }
 
   ngOnInit() {
+
+    //Get the tooltip container
+    this.tooltip = this.elementRef.nativeElement.querySelector('.container-scatter-plot > .tooltip');
+
     this.initSvg();
     this.initAxis();
     this.drawAxis();
-    //this.drawLine();
-    this.drawScatterPlot();
+    //this.drawLine();    
+    this.drawScatterPlot();    
+    //this.initTooltip();
   }
 
+  // private initTooltip() {
+  //   this.tooltip = d3.select('.container-scatter-plot > svg').append("div")
+  //     .attr("class", "tooltip")
+  //     .style("opacity", 0);
+  //     console.log("Tooltip :->" + JSON.stringify(this.tooltip))
+  // }
+
+
   private initSvg() {
-    this.svg = d3.select('svg')
+    this.svg = d3.select('.container-scatter-plot > svg')
       .append('g')
       .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
 
@@ -79,7 +93,7 @@ export class ScatterPlotComponent implements OnInit {
     // this.y1 = d3Scale.scaleBand().range([0, this.height]);
     //this.y1.domain(["Node 1", "Node 2", "Node 3"]);
 
- 
+
   }
 
 
@@ -95,7 +109,7 @@ export class ScatterPlotComponent implements OnInit {
     // Add the Y1 Axis
     this.svg.append("g")
       .attr("class", "axisRed")
-      .attr("transform", "translate( " + this.width + ", 0 )")      
+      .attr("transform", "translate( " + this.width + ", 0 )")
       // .attr('transform', "translate( " + this.width+ ", " + (this.height - (this.height/3)) + ")")
       .call(d3Axis.axisRight(this.y1));
 
@@ -149,12 +163,16 @@ export class ScatterPlotComponent implements OnInit {
       // .attr("cy", function (d) { return this.y(d.value); })
       // .attr("cx", (d: any) => { console.log("X ->" + this.calcXPlacement(d)); return this.calcXPlacement(d) })
       //.attr("cy", (d: any) => this.y(d.item_id))
-      .attr("cx", (d: any) => { console.log("Cx is: " + this.x(d.arrival_time)); return this.x(d.arrival_time) })
+      .attr("cx", (d: any) => { return this.x(d.arrival_time) })
       .attr("cy", (d: any) => { return this.calcNodeYValues(d) })
       .attr("r", 3)
       // .style("fill", "#69b3a2")
-      .style("fill",(d:any) => this.setColorCodeForDataPoints(d))
+      .style("fill", (d: any) => this.setColorCodeForDataPoints(d))
       //.style("fill", "#FF0000");
+      // .on("mouseover", (d:any) => this.toolTipMouseover(d))
+      // .on("mouseout", (d:any) => this.toolTipMouseout(d));
+      .on('mouseover', (d: any) => this.mouseOverFn(d))
+      .on('mouseout', (d: any) => this.mouseOutFn(d));
 
     //Draw a line for the different plots
     // this.svg.append("path")
@@ -176,7 +194,7 @@ export class ScatterPlotComponent implements OnInit {
     console.log("Item Number: -> " + d.item_id.item_number);
     console.log("Y is -> :" + (this.height - this.y1(d.item_id.node_number) * d.item_id.item_number));
     console.log("Band width: ->" + this.y1.bandwidth());
-    return this.y1(d.item_id.node_number) + ((this.y1.bandwidth()/100)*d.item_id.item_number);
+    return this.y1(d.item_id.node_number) + ((this.y1.bandwidth() / 100) * d.item_id.item_number);
     //return  this.height - (this.y1(d.item_id.node_number) * (d.item_id.item_number/this.y1.bandwidth));
   }
 
@@ -186,8 +204,51 @@ export class ScatterPlotComponent implements OnInit {
    * If the arrival time is postitive, the file arrived late.
    * Hence show the color as red.
    */
-  private setColorCodeForDataPoints(d):string{
+  private setColorCodeForDataPoints(d): string {
     console.log("Time Arrived :->" + d.arrival_time);
-    return (d.arrival_time <= 0) ? "#69b3a2" : "#FF0000";    
+    return (d.arrival_time <= 0) ? "#00FF00" : "#FF0000";
   }
+
+  // /****
+  //  * Display a tooltip on mouse-over 
+  //  * on the data points
+  //  */
+  // private toolTipMouseover(d) {
+  //   //var color = colorScale(d.manufacturer);
+  //   var html = d.arrival_time + "<br/>" +
+  //     // "<span style='color:" + color + ";'>" + d.manufacturer + "</span><br/>" +
+  //     // "<b>" + d.sugar + "</b> sugar, <b/>" + d.calories + "</b> calories";
+
+  //     this.tooltip.html(html)
+  //       .style("left", (d3.event.pageX + 15) + "px")
+  //       .style("top", (d3.event.pageY - 28) + "px")
+  //       .transition()
+  //       .duration(200) // ms
+  //       .style("opacity", .9) // started as 0!
+
+  // };
+
+  // private toolTipMouseout(d) {
+  //   this.tooltip.transition()
+  //     .duration(300) // ms
+  //     .style("opacity", 0); // don't care about position!
+  // };
+
+  mouseOverFn = (d) => {
+    d.arrival_string = d.arrival_time > 0 ? "Arrvied " + d.arrival_time + " hour(s) late" : "Arrvied " + (-d.arrival_time) + " hour(s) early";
+    this.node = d;
+  
+    this.tooltip.style.visibility = 'visible';
+    this.tooltip.style.opacity = 0.9;
+    //this.tooltip.style.top = (this.x.event.pageY - 35) + 'px';
+    //this.tooltip.style.left = (this.y1.event.pageX - 35) + 'px';
+    this.tooltip.style.left = (((<any>d3.event).pageX) - 260) + 'px';
+    this.tooltip.style.top = (((<any>d3.event).pageY) - 50) + 'px';    
+  }
+  
+  mouseOutFn = (d) => {
+    this.tooltip.style.visibility = 'hidden';
+    this.tooltip.style.opacity = 0;
+  }
+
 }

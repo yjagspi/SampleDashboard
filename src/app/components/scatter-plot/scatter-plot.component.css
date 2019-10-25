@@ -23,8 +23,24 @@
 
 /* To center the D3 Scatter Plot */
 .container-scatter-plot {
-    height: 100%;
+    /* height: 100%; */
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
+/* Tooltip Style */
+.tooltip {
+    position: absolute;
+    font-size: 12px;
+    width:  auto;
+    height: auto;
+    pointer-events: none;
+    background-color: grey;
+    margin: 10px;
+}
+.highlight {
+    margin: 2px;
+    background-color: yellow;
+}
+

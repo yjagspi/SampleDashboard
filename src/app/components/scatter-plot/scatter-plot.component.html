@@ -9,7 +9,13 @@
                 </button>
             </div>
             <div class="container-scatter-plot">
-                <svg width="600" height="500"></svg>
+                <svg width="600" height="500">                   
+                </svg>
+                <div class="tooltip">
+                    <div class='highlight'>Node: {{node?.item_id.node_number}}</div> 
+                    <div class='highlight'>File Number: {{node?.item_id.item_number}}</div> 
+                    <div class='highlight'>{{node?.arrival_string}}</div> 
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
